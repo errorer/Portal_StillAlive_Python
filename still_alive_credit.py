@@ -22,6 +22,10 @@
 # This program was adjusted specifically for serial terminal under Linux
 # (in this case, an Informer 213 @ 19200bps and Ubuntu 14.04)
 # Feel free to do whatever you like with this code.
+# Personnel credits come from this project: https://github.com/xBytez/aperturescience
+# ASCII arts come from this project: https://sites.google.com/site/gaddc11/Stillalive.rar?attredirects=0&d=1
+# My blog: EE Archeology @ http://7400.me
+
 
 import time
 import sys
