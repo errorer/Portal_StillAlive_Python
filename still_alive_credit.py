@@ -33,6 +33,7 @@ import threading
 import playsound
 import os
 import re
+import signal
 
 cursor_x = 1
 cursor_y = 1
@@ -51,6 +52,13 @@ enable_screen_buffer = not (is_vt or term == "linux")
 enable_color = not is_vt or int(is_vt[1]) >= 241
 
 is_draw_end = False
+
+def sigint_handler(sig, frame):
+    end_draw()
+    print('Interrupt by user')
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, sigint_handler)
 
 def begin_draw():
     if enable_screen_buffer:
