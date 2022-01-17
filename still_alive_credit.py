@@ -31,11 +31,50 @@ import time
 import sys
 import threading
 import playsound
+import os
+import re
 
 cursor_x = 1
 cursor_y = 1
 print_lock = threading.Lock()
 
+
+term = os.getenv("TERM", "vt100")
+
+is_vt = re.search(r"vt(\d+)", term)
+
+# xterm, rxvt, konsole ...
+# but fbcon in linux kernel does not support screen buffer
+enable_screen_buffer = not (is_vt or term == "linux")
+
+# color support is after VT241
+enable_color = not is_vt or int(is_vt[1]) >= 241
+
+is_draw_end = False
+
+def begin_draw():
+    if enable_screen_buffer:
+        print_lock.acquire()
+        print('\033[?1049h', end='')
+        print_lock.release()
+    if enable_color:
+        print_lock.acquire()
+        print('\033[92;40m', end='')
+        print_lock.release()
+
+
+def end_draw():
+    global is_draw_end
+    print_lock.acquire()
+    is_draw_end = True
+    if enable_color:
+        print('\033[0m', end='')
+    if enable_screen_buffer:
+        print('\033[?1049l', end='')
+    else:
+        clear(False)
+        move(1, 1, False, False)
+    print_lock.release()
 
 def move(x, y, update_cursor=True, mutex=True):
     global cursor_x, cursor_y
@@ -51,16 +90,16 @@ def move(x, y, update_cursor=True, mutex=True):
         print_lock.release()
 
 
-def clear():
+def clear(mutex=True):
     global cursor_x, cursor_y
     global print_lock
-    print_lock.acquire()
-    print(chr(27)+'[2j', end='')
-    print('\033c', end='')
-    print('\x1bc', end='')
     cursor_x = 1
     cursor_y = 1
-    print_lock.release()
+    if mutex:
+        print_lock.acquire()
+    print('\033[2J', end='')
+    if mutex:
+        print_lock.release()
 
 # print with mutex lock and cursor update. Use this for convenience
 
@@ -745,6 +784,8 @@ class thread_credits (threading.Thread):
                 for j in range(len(last_credit), 33):
                     last_credit += " "
                 print_lock.acquire()
+                if is_draw_end:
+                    break
                 move(44, 2, False, False)
                 print(last_credit, end='')
                 move(44 + credit_x, 3, False, False)
@@ -765,6 +806,7 @@ class thread_credits (threading.Thread):
 
 
 ################# Main ################
+begin_draw()
 clear()
 drawFrame()
 move(2, 2)
@@ -821,4 +863,4 @@ while(lyrics[currentLyric].mode != 9):
 
     time.sleep(0.01)
 
-print('')
+end_draw()
