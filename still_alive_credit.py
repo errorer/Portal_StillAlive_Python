@@ -51,6 +51,19 @@ enable_screen_buffer = not (is_vt or term == "linux")
 # color support is after VT241
 enable_color = not is_vt or int(is_vt[1]) >= 241
 
+term_columns, term_lines = 0, 0
+if is_vt:
+    term_columns, term_lines = 80, 24
+else:
+    term_columns, term_lines = os.get_terminal_size()
+
+term_columns = int(os.getenv("COLUMNS", term_columns))
+term_lines = int(os.getenv("LINES", term_lines))
+
+if term_columns < 80 or term_lines < 24:
+    print("the terminal size should be at least 80x24")
+    sys.exit(1)
+
 is_draw_end = False
 
 def sigint_handler(sig, frame):
@@ -143,6 +156,20 @@ class lyric:
         self.interval = _interval
         self.mode = _mode
 
+
+ascii_art_width = 40
+ascii_art_height = 20
+
+credits_width = min((term_columns - 4) // 2, 56)
+credits_height = term_lines - ascii_art_height - 2
+
+lyric_width = term_columns - 4 - credits_width
+lyric_height = term_lines - 2
+
+credits_pos_x = lyric_width + 4
+
+ascii_art_x = lyric_width + 4 + (credits_width - ascii_art_width) // 2
+ascii_art_y = credits_height + 3
 
 a1 = ["              .,-:;//;:=,               ",
       "          . :H@@@MM@M#H/.,+%;,          ",
@@ -697,67 +724,31 @@ ENRICHMENT CENTER ACTIVITY!!"""
 
 
 def drawAA(x, y, ch):
-    for y0 in range(1, 21):
-        move(x, y0 + y)
-        print(ascii_art[ch][y0 - 1], end='')
+    for dy in range(ascii_art_height):
+        move(x, y + dy)
+        print(ascii_art[ch][dy], end='')
         sys.stdout.flush()
         time.sleep(0.01)
 
 
 def drawFrame():
     move(1, 1)
-    _print(' --------------------------------------  -------------------------------------- ', True)
-    _print('|                                      ||                                      |', True)
-    _print('|                                      ||                                      |', True)
-    _print('|                                      | -------------------------------------- ', True)
-    _print('|                                      |')
-    _print('|                                      |')
-    _print('|                                      |')
-    _print('|                                      |')
-    _print('|                                      |')
-    _print('|                                      |')
-    _print('|                                      |')
-    _print('|                                      |')
-    _print('|                                      |')
-    _print('|                                      |')
-    _print('|                                      |')
-    _print('|                                      |')
-    _print('|                                      |')
-    _print('|                                      |')
-    _print('|                                      |')
-    _print('|                                      |')
-    _print('|                                      |')
-    _print('|                                      |')
-    _print('|                                      |')
-    _print(' -------------------------------------- ', False)
+    _print(' ' + '-' * lyric_width + '  ' + '-' * credits_width + ' ')
+    for _ in range(credits_height):
+        _print('|' + ' ' * lyric_width + '||' + ' ' * credits_width + '|')
+    _print('|' + ' ' * lyric_width + '| ' + '-' * credits_width + ' ')
+    for _ in range(lyric_height - 1 - credits_height):
+        _print('|' + ' ' * lyric_width + '|')
+    _print(' ' + '-' * lyric_width + ' ', False)
+    move(2, 2)
     sys.stdout.flush()
     time.sleep(1)
 
 
 def clearLyrics():
     move(1, 2)
-    _print('|                                  ')
-    _print('|                                  ')
-    _print('|                                  ')
-    _print('|                                  ')
-    _print('|                                  ')
-    _print('|                                  ')
-    _print('|                                  ')
-    _print('|                                  ')
-    _print('|                                  ')
-    _print('|                                  ')
-    _print('|                                  ')
-    _print('|                                  ')
-    _print('|                                  ')
-    _print('|                                  ')
-    _print('|                                  ')
-    _print('|                                  ')
-    _print('|                                  ')
-    _print('|                                  ')
-    _print('|                                  ')
-    _print('|                                  ')
-    _print('|                                  ')
-    _print('|                                  ')
+    for _ in range(lyric_height):
+        _print('|' + ' ' * lyric_width)
     move(2, 2)
 
 
@@ -782,34 +773,42 @@ class thread_credits (threading.Thread):
         credit_x = 0
         i = 0
         length = len(credits)
-        last_credit = ""
+        last_credits = [""]
         startTime = time.time()
         for ch in credits:
             currentTime = startTime + 174.0 / length * i
             i += 1
-            if(ch == '\n'):
+            if ch == '\n':
                 credit_x = 0
-                for j in range(len(last_credit), 33):
-                    last_credit += " "
+                last_credits.append("")
+                if len(last_credits) > credits_height:
+                    last_credits = last_credits[-credits_height:]
                 print_lock.acquire()
                 if is_draw_end:
+                    print_lock.release()
                     break
-                move(44, 2, False, False)
-                print(last_credit, end='')
-                move(44 + credit_x, 3, False, False)
-                print("                                 ", end='')
+                for y in range(2, 2 + credits_height - len(last_credits)):
+                    move(credits_pos_x, y, False, False)
+                    print(' ' * credits_width, end='')
+                for k in range(len(last_credits)):
+                    y = 2 + credits_height - len(last_credits) + k
+                    move(credits_pos_x, y, False, False)
+                    print(last_credits[k], end='')
+                    print(' ' * (credits_width - len(last_credits[k])), end='')
                 move(cursor_x, cursor_y, False, False)
                 print_lock.release()
-                last_credit = ""
             else:
-                last_credit += ch
+                last_credits[-1] += ch
                 print_lock.acquire()
-                move(44 + credit_x, 3, False, False)
+                if is_draw_end:
+                    print_lock.release()
+                    break
+                move(credits_pos_x + credit_x, credits_height + 1, False, False)
                 print(ch, end='')
                 move(cursor_x, cursor_y, False, False)
                 print_lock.release()
                 credit_x += 1
-            while(time.time() < currentTime):
+            while time.time() < currentTime:
                 time.sleep(0.01)
 
 
@@ -855,7 +854,7 @@ while(lyrics[currentLyric].mode != 9):
                            interval,
                            False)
         elif(lyrics[currentLyric].mode == 2):
-            drawAA(41, 4, lyrics[currentLyric].words)
+            drawAA(ascii_art_x, ascii_art_y, lyrics[currentLyric].words)
             move(x + 2, y + 2)
         elif(lyrics[currentLyric].mode == 3):
             clearLyrics()
