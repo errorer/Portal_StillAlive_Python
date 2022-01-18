@@ -30,10 +30,10 @@
 import time
 import sys
 import threading
-import playsound
 import os
 import re
 import signal
+from pathlib import Path
 
 cursor_x = 1
 cursor_y = 1
@@ -50,6 +50,11 @@ enable_screen_buffer = not (is_vt or term == "linux")
 
 # color support is after VT241
 enable_color = not is_vt or int(is_vt[1]) >= 241
+
+enable_sound = '--no-sound' not in sys.argv
+
+if enable_sound:
+    import playsound
 
 term_columns, term_lines = 0, 0
 if is_vt:
@@ -861,7 +866,8 @@ while(lyrics[currentLyric].mode != 9):
             x = 0
             y = 0
         elif(lyrics[currentLyric].mode == 4):
-            playsound.playsound('sa1.mp3', False)
+            if enable_sound:
+                playsound.playsound(str(Path.cwd() / 'sa1.mp3'), False)
         elif(lyrics[currentLyric].mode == 5):
             th_credit = thread_credits()
             th_credit.daemon = True
