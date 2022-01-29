@@ -31,6 +31,7 @@ import time
 import sys
 import threading
 import os
+import shutil
 import re
 import signal
 from pathlib import Path
@@ -41,7 +42,6 @@ print_lock = threading.Lock()
 
 
 term = os.getenv("TERM", "vt100")
-
 is_vt = re.search(r"vt(\d+)", term)
 
 # xterm, rxvt, konsole ...
@@ -49,7 +49,7 @@ is_vt = re.search(r"vt(\d+)", term)
 enable_screen_buffer = not (is_vt or term == "linux")
 
 # color support is after VT241
-enable_color = not is_vt or int(is_vt[1]) >= 241
+enable_color = not is_vt or int(re.search(r"\d+", is_vt.group()).group()) >= 241
 
 enable_sound = '--no-sound' not in sys.argv
 
@@ -60,7 +60,7 @@ term_columns, term_lines = 0, 0
 if is_vt:
     term_columns, term_lines = 80, 24
 else:
-    term_columns, term_lines = os.get_terminal_size()
+    term_columns, term_lines = shutil.get_terminal_size()
 
 term_columns = int(os.getenv("COLUMNS", term_columns))
 term_lines = int(os.getenv("LINES", term_lines))
@@ -85,7 +85,7 @@ def begin_draw():
         print_lock.release()
     if enable_color:
         print_lock.acquire()
-        print('\033[92;40m', end='')
+        print('\033[33;40;1m', end='')
         print_lock.release()
 
 
@@ -738,10 +738,10 @@ def drawAA(x, y, ch):
 
 def drawFrame():
     move(1, 1)
-    _print(' ' + '-' * lyric_width + '  ' + '-' * credits_width + ' ')
+    _print(' ' + '-' * lyric_width + '  ' + '-' * credits_width + ' ', not is_vt)
     for _ in range(credits_height):
-        _print('|' + ' ' * lyric_width + '||' + ' ' * credits_width + '|')
-    _print('|' + ' ' * lyric_width + '| ' + '-' * credits_width + ' ')
+        _print('|' + ' ' * lyric_width + '||' + ' ' * credits_width + '|', not is_vt)
+    _print('|' + ' ' * lyric_width + '| ' + '-' * credits_width + ' ', not is_vt)
     for _ in range(lyric_height - 1 - credits_height):
         _print('|' + ' ' * lyric_width + '|')
     _print(' ' + '-' * lyric_width + ' ', False)
