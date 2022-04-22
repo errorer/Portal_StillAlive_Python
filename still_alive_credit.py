@@ -454,12 +454,12 @@ lyrics = [
     lyric("And we're out of beta.",             9357,   -1,   0),
     lyric("We're releasing on time.",           9560,   -1,   0),
     lyric(4,                                    9700,   0,    2),  # ASCII 5
-    lyric("So I'm GLaD I got burned.",          9770,   -1,   0),
+    lyric("So I'm GLaD. I got burned.",          9770,   -1,   0),
     lyric(2,                                    9913,   0,    2),  # ASCII 3
     lyric("Think of all the things we learned", 9983,   -1,   0),
     lyric(0,                                    10120,  0,    2),  # ASCII 1
-    lyric("For the people who are",             10190,  -1,   0),
-    lyric("Still alive.",                       10327,  1.8,  0),
+    lyric("for the people who are",             10190,  -1,   0),
+    lyric("still alive.",                       10327,  1.8,  0),
 
     ##########  Page 3  ##########
     lyric(0,                                    10603,
@@ -471,10 +471,10 @@ lyrics = [
     lyric("",                                   11130,  0.05, 0),
     lyric("Go ahead and leave ",                11130,  -1,   1),
     lyric("me.",                                11280,  0.5,  0),
-    lyric("I think I'd prefer to stay ",        11507,  -1,   1),
+    lyric("I think I prefer to stay ",        11507,  -1,   1),
     lyric("inside.",                            11787,  1.13, 0),
     lyric("Maybe you'll find someone else",     12037,  -1,   0),
-    lyric("To help you.",                       12390,  1.23, 0),
+    lyric("to help you.",                       12390,  1.23, 0),
     lyric("Maybe Black ",                       12737,  -1,   1),
     lyric(7,                                    12787,  0,    2),  # ASCII 8
     lyric("Mesa...",                            12857,  2.7,  0),
@@ -487,10 +487,10 @@ lyrics = [
     lyric(9,                                    14123,  0,    2),  # ASCII 10
     lyric("Look at me still talking",           14193,  -1,   0),
     lyric(1,                                    14320,  0,    2),  # ASCII 2
-    lyric("when there's science to do.",        14390,  -1,  0),
+    lyric("when there's Science to do.",        14390,  -1,  0),
     lyric(0,                                    14527,  0,    2),  # ASCII 1
     lyric("When I look out there,",             14597,  -1,   0),
-    lyric("It makes me GLaD I'm not you.",      14767,  -1,   0),
+    lyric("it makes me GLaD I'm not you.",      14767,  -1,   0),
     lyric(2,                                    14913,  0,    2),  # ASCII 3
     lyric("I've experiments to run.",           14983,  -1,   0),
     lyric(4,                                    15120,  0,    2),  # ASCII 5
@@ -512,11 +512,11 @@ lyrics = [
     lyric("PPPS: I feel FANTASTIC and I'm",     16550,  -1,   0),
     lyric("still alive.",                       16760,  -1,   0),
     lyric("",                                   16860,  -1,   0),
-    lyric("FINAL THOUGH:",                      16860,  -1,   0),
+    lyric("FINAL THOUGHT:",                      16860,  -1,   0),
     lyric("While you're dying I'll be",         16993,  -1,   0),
     lyric("still alive.",                       17157,  -1,   0),
     lyric("",                                   17277,  -1,   0),
-    lyric("FINAL THOUGH PS:",                   17277,  -1,   0),
+    lyric("FINAL THOUGHT PS:",                   17277,  -1,   0),
     lyric("And when you're dead I will be",     17367,  -1,   0),
     lyric("still alive.",                       17550,  1.13, 0),
     lyric("",                                   17550,  -1,   0),
