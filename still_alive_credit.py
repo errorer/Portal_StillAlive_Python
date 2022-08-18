@@ -11,7 +11,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-# The copyright for song <Still Alive> belongs to Jonathan Coulton and Valve Software
+# The copyright for song (Still Alive) belongs to Jonathan Coulton and Valve Software
 # Contact me if there's copyright violation and if deletion of the content is needed.
 #
 #
