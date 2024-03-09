@@ -7,7 +7,7 @@
 
 Windows 下需要使用 Windows terminal，MinTTY 等支持 ANSI 终端转义序列的终端模拟器。
 
-为了播放音乐，需要用 `pip` 安装 `playsound`。`playground` 在 Linux 下依赖 
+为了播放音乐，需要用 `pip` 安装 `playsound`。`playsound` 在 Linux 下依赖 
 `python-gobject` 软件包（Ubuntu 已默认安装）。在 MacOS 下还需要用 `pip` 安装 `PyObjC`。
 
 ## 使用方法
