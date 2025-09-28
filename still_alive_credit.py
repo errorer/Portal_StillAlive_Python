@@ -55,7 +55,7 @@ enable_sound = '--no-sound' not in sys.argv
 
 enable_stay = '--no-stay' not in sys.argv
 if enable_sound:
-    import playsound
+    import playsound3
 
 term_columns, term_lines = 0, 0
 if is_vt:
@@ -868,7 +868,7 @@ while(lyrics[currentLyric].mode != 9):
             y = 0
         elif(lyrics[currentLyric].mode == 4):
             if enable_sound:
-                playsound.playsound(str(Path.cwd() / 'sa1.mp3'), False)
+                playsound3.playsound(str(Path.cwd() / 'sa1.mp3'), False)
         elif(lyrics[currentLyric].mode == 5):
             th_credit = thread_credits()
             th_credit.daemon = True

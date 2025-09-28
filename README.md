@@ -7,8 +7,11 @@
 
 Windows 下需要使用 Windows terminal，MinTTY 等支持 ANSI 终端转义序列的终端模拟器。
 
-为了播放音乐，需要用 `pip` 安装 `playsound`。`playground` 在 Linux 下依赖 
-`python-gobject` 软件包（Ubuntu 已默认安装）。在 MacOS 下还需要用 `pip` 安装 `PyObjC`。
+播放音乐依赖 [playsound3](https://pypi.org/project/playsound3/)，需要使用 `pip install playsound3` 来安装。
+参见其文档，在不同平台下可能需要进行相应配置、安装来确保声音正常播放，在 Linux 下可能依赖 `python-gobject` 软件包（Ubuntu 已默认安装）。
+在 MacOS 下可能需要用 `pip` 安装 `PyObjC`。
+
+如果使用 [uv](https://docs.astral.sh/uv/)，可以在自动创建的临时环境中运行而不用手动安装依赖: `uv run --with playsound3 still_alive_credit.py`。
 
 ## 使用方法
 
@@ -46,9 +49,12 @@ in text terminal.
 In Windows system, you need a teminal emulator supporting ANSI escape sequences
 like Windows Terminal, MinTTY, Cmder or ConEmu。
 
-For playing music, you need install `playsound` with `pip`. In Linux `playsound`
-depends on `python-gobject` (default installed in Ubuntu). In MacOS you also need
-to use `pip` to install `PyObjC`.
+For playing music, you need install [playsound3](https://pypi.org/project/playsound3/) with `pip`.
+Please read its document to know how to configure the backends. On Linux you may need to install
+`python-gobject` (default installed in Ubuntu). In MacOS you may need to use `pip` to install `PyObjC`.
+
+With [uv](https://docs.astral.sh/uv/), you can run the script in a temporary environement and
+no need to manually install the dependencies: `uv run --with playsound3 still_alive_credit.py`.
 
 ## Usage
 
